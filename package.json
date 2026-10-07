@@ -1,0 +1,32 @@
+{
+  "name": "vp",
+  "version": "1.0.0",
+  "description": "veebiprogrammeerimise kursuse tunnitöö",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://ukonoulik@github.com/ukonoulik/vp.git"
+  },
+  "keywords": [
+    "javascript",
+    "veebiprogrammeerimine",
+    "õppetöö",
+    "TLÜ",
+    "DTI"
+  ],
+  "author": "Uko Nõulik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ukonoulik/vp/issues"
+  },
+  "homepage": "https://github.com/ukonoulik/vp#readme",
+  "dependencies": {
+    "dotenv": "^18.0.6",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "mysql2": "^3.24.5"
+  }
+}

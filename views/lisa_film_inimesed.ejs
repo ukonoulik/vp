@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+	<meta charset="utf-8">
+	<title>Uko Nõulik, veebiprogrammeerimine</title>
+</head>
+<body>
+	<img src="/pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+	 <h1>Eesti film</h1>
+	 <p>Siin saab lisada Eesti filmidega seotud inimesi.</p>
+	 <ul>
+		 <li><a href = "/">Avalehele</a></li>
+		 <li><a href = "/eestifilm">Eesti filmi avalehele</a></li>
+	 </ul>
+	<hr>
+	<h2> Lisa filmiinimene</h2>
+	<form method="POST">
+		<label for="firstNameInput">Filmiinimese eesnimi</label>
+		<input id="firstNameInput" name="firstNameInput" type="text" placeholder="Eesnimi">
+		<br>
+		<label for="lastNameInput">Filmiinimese perekonnanimi</label>
+		<input id="lastNameInput" name="lastNameInput" type="text" placeholder="Perekonnanimi">
+		<br>
+		<label for="bornInput">Filmiinimese sünnikuupäev</label>
+		<input id="bornInput" name="bornInput" type="date">
+		<br>
+		<label for="deceasedInput">Filmiinimese surmakuupäev</label>
+		<input id="deceasedInput" name="deceasedInput" type="date">
+		<br>
+		<input id="personSubmit" name ="personSubmit" type="submit" value="Salvesta">
+	</form>
+	<p><%= notice %></p>
+</body>
+</html>
