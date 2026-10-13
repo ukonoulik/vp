@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="utf-8">
+    <title>Filmiameti lisamine</title>
+</head>
+<body>
+    <img src="/pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+    <h1>Eesti film</h1>
+    <p><a href="/eestifilm">Eesti filmi avalehele</a></p>
+    <h2>Lisa filmiamet</h2>
+    <form method="POST" action="/eestifilm/lisa_ametid">
+        <label for="professionInput">Ameti nimetus</label>
+        <input id="professionInput" name="professionInput" type="text" value="<%= professionInput ?? '' %>">
+        <br>
+        <input type="submit" value="Salvesta">
+    </form>
+    <p><%= notice %></p>
+</body>
+</html>
