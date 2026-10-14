@@ -11,8 +11,11 @@
     <h2>Lisa filmiamet</h2>
     <form method="POST" action="/eestifilm/lisa_ametid">
         <label for="professionInput">Ameti nimetus</label>
-        <input id="professionInput" name="professionInput" type="text" value="<%= professionInput ?? '' %>">
+        <input id="professionInput" name="professionInput" type="text">
         <br>
+		<label for="professionDesc">Ameti kirjeldus</label>
+		<input id="professionDesc" name="professionInput" type="text">
+		<br>
         <input type="submit" value="Salvesta">
     </form>
     <p><%= notice %></p>

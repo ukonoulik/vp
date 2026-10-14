@@ -97,8 +97,18 @@ app.get('/lastvisit', async (req, res)=>{
 	}
 });
 
+const eestifilmRouter = require('./routes/eestifilmRoutes');
+app.use('/eestifilm', eestifilmRouter);
+
+const filmid = require('./routes/eestifilmRoutes');
+app.use('/eestifilm/filmid', eestifilmRouter);
+
+const ametid = require('./routes/eestifilmRoutes');
+app.use('/eestifilm/ametid', eestifilmRouter);
+
+
 //eesti filmi leht
-app.get('/eestifilm', (req, res)=>{
+/* app.get('/eestifilm', (req, res)=>{
 	res.render('eestifilm');
 });
 
@@ -144,7 +154,7 @@ function kontrolliKuupaev(vaartus) {
     return kuupaev;
 }
 
-//alguses kõik sisendid tühjad
+//filmiga seotud inimesed
 app.get('/eestifilm/lisa_film_inimesed', (req, res)=>{
 	res.render('lisa_film_inimesed', {
 		notice: 'Ootan sisestust!'
@@ -177,7 +187,7 @@ app.post('/eestifilm/lisa_film_inimesed', async (req, res)=>{
         vead.push('Sünnikuupäev ei ole reaalne kuupäev.');
     } else if (bornDate > timeNow) {
         vead.push('Sünnikuupäev ei tohi olla tulevikus.');
-    }
+    } 
 
     // surmakuupäev on valikuline, kuid peab õige olema
     if (deceasedInput != '') {
@@ -188,7 +198,7 @@ app.post('/eestifilm/lisa_film_inimesed', async (req, res)=>{
             vead.push('Surmakuupäev ei tohi olla tulevikus.');
         } else if (bornDate && deceasedDate < bornDate) {
             vead.push('Surmakuupäev ei tohi olla sünnikuupäevast varasem.');
-        }
+        } 
     }
 
     if (vead.length > 0) {
@@ -213,7 +223,7 @@ app.post('/eestifilm/lisa_film_inimesed', async (req, res)=>{
 			deceasedDate ? deceasedInput : null
 		]);
 		res.render('lisa_film_inimesed', {notice: req.body.firstNameInput + ' ' + req.body.lastNameInput + 'Andmebaasi salvestatud!'});
-		// Pärast edukat salvestamist tühjendame sisendid (null).
+		// pärast edukat salvestamist tühjendame sisendid (null).
         res.render('lisa_film_inimesed', {
             notice: firstNameInput.trim() + ' ' + lastNameInput.trim() + ' on andmebaasi salvestatud!',
             firstNameInput: null,
@@ -234,15 +244,22 @@ app.post('/eestifilm/lisa_film_inimesed', async (req, res)=>{
 });
 
 //filmi lisamise leht
-app.get('/eestifilm/lisa_filmid', async (req, res)=>{
-	const titleInput = req.body.titleInput || '';
+app.get('/eestifilm/lisa_filmid', (req, res)=>{
+	res.render('lisa_filmid', {
+		notice: 'Ootan sisestust!'
+	});
+});
+
+app.post('/eestifilm/lisa_filmid', async (req, res)=>{
+	const titleInput = req.body.titleInput ||'';
 	const yearInput = req.body.yearInput ||'';
-	const sisendid = { title, yearInput };
+	const durationInput = req.body.durationInput ||'';
+	const sisendid = { titleInput, yearInput, durationInput };
 	const year = Number(yearInput);
 	
-	if (!titleInput.trim() || year < 1888 || year > 2100) {
+	if (!titleInput.trim() || year < 1888 || year > 2100 || !durationInput.trim()) {
         return res.render('lisa_filmid', {
-            notice: 'Sisesta filmi pealkiri ja korrektne väljalaskeaasta (1888–2100).', ...sisendid
+            notice: 'Sisesta filmi pealkiri, korrektne väljalaskeaasta (1888–2100) ja kestvus', ...sisendid
         });
     }
 	
@@ -254,8 +271,8 @@ app.get('/eestifilm/lisa_filmid', async (req, res)=>{
             password: process.env.DB_PASS,
             database: process.env.DB_DATABASE
         });
-        await conn.execute('INSERT INTO film (title, release_year) VALUES (?,?)',
-            [titleInput.trim(), year]);
+        await conn.execute('INSERT INTO movie (title, release_year, duration_minutes) VALUES (?,?,?)',
+            [titleInput.trim(), year, duration]);
         res.render('lisa_filmid', {
             notice: 'Film on salvestatud!', titleInput: null, yearInput: null
         });
@@ -308,6 +325,6 @@ app.post('/eestifilm/lisa_ametid', async (req, res)=>{
     finally {
         if (conn) await conn.end();
     }
-});
+}); */
 
 app.listen(5312);
