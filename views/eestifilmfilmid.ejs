@@ -5,7 +5,7 @@
 	<title>Uko Nõulik, veebiprogrammeerimine</title>
 </head>
 <body>
-	<img src="../pic/veebiprogrammeerimine_2026_TA.png" alt="">
+	<img src="../pic/veebiprogrammeerimine_2026_AA.png" alt="">
 	<h1>Eesti filmid</h1>
 	<p>Siin lehel on näha Eesti filme.</p>
 	<hr>
@@ -14,6 +14,7 @@
 		<li><a href="/eestifilm">Eesti filmi avaleht</a></li>
 	</ul>
 	<hr>
+	<% if (notice) { %><p><%= notice %></p><% } %>
 	<ol>
 		<% movieList.forEach(movie => { %>
 			<li><%= movie.title %>, <%= movie.release_year %>, <%= movie.duration_minutes %> min<% if(movie.description){ %>. <%= movie.description %><% } %></li>

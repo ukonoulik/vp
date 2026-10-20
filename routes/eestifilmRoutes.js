@@ -1,38 +1,28 @@
 const express = require('express');
 const router = express.Router();
+const ctrl = require('../controllers/eestifilmControllers');
 
-//kasutatavad kontrollerid
-const {
-	eestifilm,
-	eestifilmInimesed,
-	eestifilmInimesedLisa,
-	eestifilmInimesedLisaPost,
-	filmid,
-	filmidLisa,
-	filmidLisaPost,
-	ametid,
-	ametidLisa,
-	ametidLisaPost
-} = require('../controllers/eestifilmControllers');
+router.get('/', ctrl.eestifilm);
 
-router.route('/').get(eestifilm);
+router.get('/film_inimesed', ctrl.eestifilmInimesed);
+router.route('/lisa_film_inimesed')
+    .get(ctrl.eestifilmInimesedLisa)
+    .post(ctrl.eestifilmInimesedLisaPost);
 
-router.route('/film_inimesed').get(eestifilmInimesed);
+router.get('/filmid', ctrl.filmid);
+router.route('/lisa_filmid')
+    .get(ctrl.filmidLisa)
+    .post(ctrl.filmidLisaPost);
 
-router.route('/lisa_film_inimesed').get(eestifilmInimesedLisa);
+router.get('/ametid', ctrl.ametid);
+router.route('/lisa_ametid')
+    .get(ctrl.ametidLisa)
+    .post(ctrl.ametidLisaPost);
 
-router.route('/lisa_film_inimesed').post(eestifilmInimesedLisaPost);
-
-router.route('/filmid').get(filmid);
-
-router.route('/lisa_filmid').get(filmidLisa);
-
-router.route('/lisa_filmid').post(filmidLisaPost);
-
-router.route('/ametid').get(ametid);
-
-router.route('/lisa_ametid').get(ametidLisa);
-
-router.route('/lisa_ametid').post(ametidLisaPost);
+// Filmi, inimese ja ameti vahelised seosed
+router.get('/seosed', ctrl.seosed);
+router.route('/lisa_seos')
+    .get(ctrl.seosLisa)
+    .post(ctrl.seosLisaPost);
 
 module.exports = router;

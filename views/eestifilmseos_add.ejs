@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="utf-8">
+    <title>Filmi seose lisamine</title>
+</head>
+<body>
+    <img src="/pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+    <h1>Lisa filmiga seotud inimene ja amet</h1>
+    <ul>
+        <li><a href="/">Avalehele</a></li>
+        <li><a href="/eestifilm">Eesti filmi avalehele</a></li>
+        <li><a href="/eestifilm/seosed">Vaata olemasolevaid seoseid</a></li>
+    </ul>
+    <hr>
+    <form method="POST" action="/eestifilm/lisa_seos">
+        <label for="personInput">Inimene</label>
+        <select name="personInput" id="personInput" required>
+            <option value="">-- Vali inimene --</option>
+            <% personList.forEach(person => { %>
+                <option value="<%= person.id %>" <%= String(person.id) === String(personInput) ? 'selected' : '' %>>
+                    <%= person.first_name %> <%= person.last_name %>
+                </option>
+            <% }); %>
+        </select>
+        <br>
+        <label for="movieInput">Film</label>
+        <select name="movieInput" id="movieInput" required>
+            <option value="">-- Vali film --</option>
+            <% movieList.forEach(movie => { %>
+                <option value="<%= movie.id %>" <%= String(movie.id) === String(movieInput) ? 'selected' : '' %>>
+                    <%= movie.title %>
+                </option>
+            <% }); %>
+        </select>
+        <br>
+        <label for="professionInput">Amet</label>
+        <select name="professionInput" id="professionInput" required>
+            <option value="">-- Vali amet --</option>
+            <% professionList.forEach(profession => { %>
+                <option value="<%= profession.id %>" data-actor="<%= profession.isActor ? 'true' : 'false' %>" <%= String(profession.id) === String(professionInput) ? 'selected' : '' %>>
+                    <%= profession.title %>
+                </option>
+            <% }); %>
+        </select>
+        <div id="characterField">
+            <label for="characterInput">Tegelaskuju nimi (ainult näitleja puhul)</label>
+            <input type="text" name="characterInput" id="characterInput" maxlength="255" value="<%= characterInput %>">
+        </div>
+        <button type="submit" <%= personList.length && movieList.length && professionList.length ? '' : 'disabled' %>>Salvesta seos</button>
+    </form>
+    <p><%= notice %></p>
+    <script>
+        const professionSelect = document.getElementById('professionInput');
+        const characterField = document.getElementById('characterField');
+        const characterInput = document.getElementById('characterInput');
+
+        function uuendaTegelaskujuValja() {
+            const option = professionSelect.options[professionSelect.selectedIndex];
+            const isActor = option && option.dataset.actor === 'true';
+            characterField.hidden = !isActor;
+            characterInput.disabled = !isActor;
+        }
+        professionSelect.addEventListener('change', uuendaTegelaskujuValja);
+        uuendaTegelaskujuValja();
+    </script>
+</body>
+</html>

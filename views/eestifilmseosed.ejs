@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="utf-8">
+    <title>Eesti filmide seosed</title>
+</head>
+<body>
+    <img src="/pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+    <h1>Filmide, inimeste ja ametite seosed</h1>
+    <ul>
+        <li><a href="/">Avalehele</a></li>
+        <li><a href="/eestifilm">Eesti filmi avalehele</a></li>
+        <li><a href="/eestifilm/lisa_seos">Lisa uus seos</a></li>
+    </ul>
+    <hr>
+    <% if (notice) { %><p><%= notice %></p><% } %>
+    <% if (!relationList.length && !notice) { %>
+        <p>Ühtegi seost pole veel lisatud.</p>
+    <% } else if (relationList.length) { %>
+        <table border="1" cellpadding="6">
+            <thead>
+                <tr><th>Film</th><th>Inimene</th><th>Amet</th><th>Tegelaskuju</th></tr>
+            </thead>
+            <tbody>
+                <% relationList.forEach(relation => { %>
+                    <tr>
+                        <td><%= relation.movie_title %> (<%= relation.release_year %>)</td>
+                        <td><%= relation.first_name %> <%= relation.last_name %></td>
+                        <td><%= relation.profession_title %></td>
+                        <td><%= relation.character_name || '–' %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    <% } %>
+</body>
+</html>

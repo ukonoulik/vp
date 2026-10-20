@@ -10,13 +10,13 @@
     <p><a href="/eestifilm">Eesti filmi avalehele</a></p>
     <h2>Lisa filmiamet</h2>
     <form method="POST" action="/eestifilm/lisa_ametid">
-        <label for="professionInput">Ameti nimetus</label>
-        <input id="professionInput" name="professionInput" type="text">
+        <label for="title">Ameti nimetus</label>
+        <input id="title" name="title" type="text" value="<%= title || '' %>" required>
         <br>
-		<label for="professionDesc">Ameti kirjeldus</label>
-		<input id="professionDesc" name="professionInput" type="text">
-		<br>
-        <input type="submit" value="Salvesta">
+        <label for="description">Ameti kirjeldus</label>
+        <input id="description" name="description" type="text" value="<%= description || '' %>" required>
+        <br>
+        <button type="submit">Salvesta</button>
     </form>
     <p><%= notice %></p>
 </body>

@@ -5,7 +5,7 @@
 	<title>Uko Nõulik, veebiprogrammeerimine</title>
 </head>
 <body>
-	<img src="../pic/veebiprogrammeerimine_2026_TA.png" alt="">
+	<img src="../pic/veebiprogrammeerimine_2026_AA.png" alt="">
 	<h1>Eesti filmid</h1>
 	<p>Siin lehel on näha filmidega seotud ameteid.</p>
 	<hr>
@@ -14,9 +14,10 @@
 		<li><a href="/eestifilm">Eesti filmi avaleht</a></li>
 	</ul>
 	<hr>
+    <% if (notice) { %><p><%= notice %></p><% } %>
     <ol>
         <% professionList.forEach (function(profession){%>
-        <li>Amet: <%=profession.title%> <br> description: <%=profession.description %>,<br>
+        <li>Amet: <%= profession.title %><br>Kirjeldus: <%= profession.description %></li>
          <% }); %>
     </ol>
 </body>

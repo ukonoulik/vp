@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="et">
 <head>
-	<meta charset="utf-8">
-	<title>Uko Nõulik, veebiprogrammeerimine</title>
+    <meta charset="utf-8">
+    <title>Külastuse registreerimine</title>
 </head>
 <body>
-	<img src="pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
-	 <h1>Registreeri oma külastus</h1>
-	 <ul>
-		 <li><a href = "/">Avalehele</a></li>
-	 </ul>
-	<hr>
-	<form method="POST">
-		<label for="nameInput">Sinu nimi: </label>
-		<input id="nameInput" name="nameInput" type="text" placeholder ="Sinu nimi...">
-		<input id="nameSubmit" name="nameSubmit" type="submit" value="Salvesta">
-	</form>
-	<hr>
+    <img src="/pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+    <h1>Registreeri oma külastus</h1>
+    <ul>
+        <li><a href="/">Avalehele</a></li>
+        <li><a href="/visits">Külastuste avalehele</a></li>
+    </ul>
+    <hr>
+    <form method="POST" action="/visits/regvisit">
+        <label for="nameInput">Sinu nimi:</label>
+        <input id="nameInput" name="nameInput" type="text" placeholder="Sinu nimi..." value="<%= nameInput || '' %>" required>
+        <button type="submit">Salvesta</button>
+    </form>
+    <% if (notice) { %><p><%= notice %></p><% } %>
 </body>
 </html>

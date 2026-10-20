@@ -43,11 +43,21 @@ app.get('/vanasona', async (req, res)=>{
 		res.render('wisdom', {wisdom: wisdom});
 	}
 	catch (err){
-		conosle.log(err);
+		conosle.log('Vanasõna lugemise viga: ' + err);
 		res.render('wisdom', {wisdom: 'Vanasõna ei leitud'});
 	}
 });
 
+app.use('/eestifilm', require('./routes/eestifilmRoutes'));
+app.use('/visits', require('./routes/visitsRoutes'));
+
+app.get('/regvisit', (req, res) => res.redirect('/visits/regvisit'));
+app.post('/regvisit', (req, res) => res.redirect(307, '/visits/regvisit'));
+app.get('/lastvisit', (req, res) => res.redirect('/visits'));
+
+module.exports = app;
+
+/*
 //külastuse leht
 app.get('/regvisit', (req, res)=>{
 	res.render('regvisit');

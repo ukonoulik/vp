@@ -13,7 +13,8 @@
 		 <li><a href = "/eestifilm">Eesti filmi avalehele</a></li>
 	 </ul>
 	<hr>
-	<h2>Siit andmebaasist leitavad filmiinimsesed</h2>
+	<h2>Andmebaasis olevad filmiinimesed</h2>
+    <% if (notice) { %><p><%= notice %></p><% } %>
 	<ol>
 		<% personList.forEach(function(person) { %>
 		<li><%= person.first_name%> <%= person.last_name %>, sündinud <%= person.born %>.</li>
