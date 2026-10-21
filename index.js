@@ -18,15 +18,24 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 //hakkame päringuid parsima 
-app.use(bodyparser.urlencoded({extended: false}));
+app.use(bodyparser.urlencoded({extended: true}));
 
 //avaleht
-app.get('/', (req, res)=>{
+app.get('/', async (req, res)=>{
 	//res.send('Express.js veeb käivitus!');
 	const day = dateTimeET.dayET();
 	const date = dateTimeET.dateET();
 	const time = dateTimeET.timeET();
-	res.render('index', {day: day, date: date, time: time});
+	//ühendus andmebaasiga
+	conn = await mysql.createConnection({
+			host: process.env.DB_HOST,
+			user: process.env.DB_USER,
+			password: process.env.DB_PASS,
+			database: process.env.DB_DATABASE
+		});
+	const sqlReq = 'SELECT filename, alttext FROM tabelinimi WHERE id=(SELECT MAX(id) FROM tabelinimi WHERE privacy=? AND deleted IS NULL);'
+	const [latestGalleryPhoto] = await conn.execute(sqlReq);
+	res.render('index', {day: day, date: date, time: time, latestGalleryPhoto});
 });
 
 //eelmise kodutöö leht
@@ -56,6 +65,9 @@ app.post('/regvisit', (req, res) => res.redirect(307, '/visits/regvisit'));
 app.get('/lastvisit', (req, res) => res.redirect('/visits'));
 
 module.exports = app;
+
+const galleryPhotoUploadRouter = require('./routes/galleryPhotoUploadRoutes');
+app.use('/galleryphotoupload', galleryPhotoUploadRouter);
 
 /*
 //külastuse leht
