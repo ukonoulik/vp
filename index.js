@@ -41,10 +41,20 @@ app.get('/', async (req, res) => {
     res.render('index', {day, date, time, latestGalleryPhoto});
 });
 
-//eelmise kodutöö leht
+//tlü leht
 app.get('/miks-tlu', (req, res) => {
     res.render('miks-tlu');
 });
+
+//kodu leht ja väljalogimise leht
+app.get('/home', (req, res) => {
+	res.render('home');
+});
+
+app.get('/logout', (req, res) => {
+	res.redirect('/');
+});
+
 
 //vanasõnade leht
 app.get('/vanasona', async (req, res) => {
@@ -70,6 +80,12 @@ app.get('/lastvisit', (req, res) => res.redirect('/visits'));
 //fotode üleslaadimine ja galerii
 app.use('/galleryphotoupload', require('./routes/galleryPhotoUploadRoutes'));
 app.use('/gallery', require('./routes/galleryRoutes'));
+
+const signupRouter = require('./routes/signupRoutes');
+app.use('/signup', signupRouter);
+
+const signinRouter = require('./routes/signinRoutes');
+app.use('/signin', signinRouter);
 
 module.exports = app;
 app.listen(5312);
