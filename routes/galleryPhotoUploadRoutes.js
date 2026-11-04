@@ -1,18 +1,15 @@
 const express = require('express');
-const multer = require('multer'); 
-
+const multer = require('multer');
 const router = express.Router();
 
-const upload = multer({dest: './public/gallery/orig/'});
+const upload = multer({
+    dest: process.env.UPLOAD_ORIGINAL_PATH || './public/gallery/orig/',
+    fileFilter: (req, file, cb) => cb(null, file.mimetype === 'image/jpeg')
+});
 
-//kasutatavad kontrollerid
-const {
-	galleryPhotoUpload,
-	galleryPhotoUploadPost
-} = require('../controllers/galleryPhotoUploadControllers');
+const {galleryPhotoUpload, galleryPhotoUploadPost} = require('../controllers/galleryPhotoUploadControllers');
 
-router.route('/').get(galleryPhotoUpload);
-
-router.route('/').post(upload.single('photoInput'), galleryPhotoUploadPost);
+router.get('/', galleryPhotoUpload);
+router.post('/', upload.single('photoInput'), galleryPhotoUploadPost);
 
 module.exports = router;

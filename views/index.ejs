@@ -16,10 +16,15 @@
         <li><a href="/miks-tlu">Miks tulin TLÜ-sse õppima?</a></li>
         <li><a href="/visits">Külastused</a></li>
         <li><a href="/eestifilm">Eesti film</a></li>
-		<li><a href="/galleryphotoupload">Fotode üleslaadimise leht</a></li>
+        <li><a href="/galleryphotoupload">Fotode üleslaadimise leht</a></li>
+        <li><a href="/gallery">Fotogalerii</a></li>
     </ul>
-    <h2>Minu valitud foto</h2>
-    <p>Kõige uuem pilt <%= latestGalleryPhoto %></p>
+    <h2>Uusim avalik foto</h2>
+    <% if (latestGalleryPhoto) { %>
+        <img src="/gallery/normal/<%= latestGalleryPhoto.filename %>" alt="<%= latestGalleryPhoto.alttext || 'Uusim avalik foto' %>" width="400">
+    <% } else { %>
+        <p>Avalikke fotosid veel pole.</p>
+    <% } %>
     <p>Hetkel on <%= day %>.</p>
     <p>Kuupäev on: <%= date %></p>
     <p>Lehekülg avati kell: <%= time %></p>
