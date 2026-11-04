@@ -24,7 +24,6 @@ const signinPagePost = async (req, res) => {
 		return res.render('signin', {notice: notice});
 	}
 	
-	
 	try {
         conn = await mysql.createConnection({
             host: process.env.DB_HOST,
