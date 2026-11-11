@@ -3,10 +3,28 @@ const dateTimeET = require('./src/dateTimeET.js');
 const fs = require('fs').promises;
 const mysql = require('mysql2/promise');
 require('dotenv').config();
-
+const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
+const checkLogin = require('./src/checkLogin')
 const textRef = 'public/txt/vanasonad.txt';
 const app = express();
-
+//määrame sessioonihalduse
+//app.use(session({secret: process.env.SES_SECRET, saveUninitialized: false, resave: true}));
+const sessionStore = new MySQLStore({
+			host: process.env.DB_HOST,
+            user: process.env.DB_USER,
+            password: process.env.DB_PASS,
+            database: process.env.DB_DATABASE
+			});
+app.use(session({
+	secret: process.env.SES_SECRET,
+	store: sessionStore,
+	saveUninitialized: false,
+	resave: false, 
+	cookie: {
+		maxage: 1000 * 60 * 60 * 1 //sessioon aegub tunniga 
+	}
+}));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
@@ -52,6 +70,8 @@ app.get('/home', (req, res) => {
 });
 
 app.get('/logout', (req, res) => {
+	//hävitame sessiooni
+	res.session.destroy();
 	res.redirect('/');
 });
 
