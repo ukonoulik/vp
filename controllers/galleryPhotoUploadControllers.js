@@ -1,92 +1,78 @@
 const mysql = require('mysql2/promise');
 const fs = require('fs').promises;
-const path = require('path');
 const sharp = require('sharp');
 
-//Fotode kaustad loeme .env failist
-const originalPath = process.env.UPLOAD_ORIGINAL_PATH || './public/gallery/orig/';
-const resizedPath = process.env.UPLOAD_RESIZED_PATH || './public/gallery/normal/';
-const thumbnailPath = process.env.UPLOAD_THUMBNAIL_PATH || './public/gallery/thumbs/';
+const watermarkFile = "./public/pic/vp_logo_small.png";
+
+//@desc page for uploading photos to gallery
+//@route GET /galleryphotoupload
+//@access public
 
 const galleryPhotoUpload = (req, res) => {
-    res.render('galleryphotoupload', {notice: ''});
+	res.render('galleryphotoupload');
 };
+
+//@desc page for uploading photos to gallery
+//@route POST /galleryphotoupload
+//@access public
 
 const galleryPhotoUploadPost = async (req, res) => {
-    if (!req.file) {
-        return res.render('galleryphotoupload', {notice: 'Palun vali JPG-foto!'});
-    }
-
-    let conn;
-    try {
-        const fileName = 'vp_' + Date.now() + '.jpg';
-        const originalFile = path.join(originalPath, fileName);
-
-        await fs.mkdir(resizedPath, {recursive: true});
-        await fs.mkdir(thumbnailPath, {recursive: true});
-        await fs.rename(req.file.path, originalFile);
-
-        //Normaalsuuruses pildile vesimärk alla paremale
-        await sharp(originalFile)
-            .resize(800, 500)
-            .composite([{input: './public/pic/vp_logo_small.png', gravity: 'southeast'}])
-            .jpeg({quality: 90})
-            .toFile(path.join(resizedPath, fileName));
-
-        //Väike eelvaade ilma vesimärgita
-        await sharp(originalFile)
-            .resize(100, 100)
-            .jpeg({quality: 90})
-            .toFile(path.join(thumbnailPath, fileName));
-
-        conn = await mysql.createConnection({
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASS,
-            database: process.env.DB_DATABASE
-        });
-
-        const sqlReq = 'INSERT INTO galleryphotos (filename, origname, alttext, privacy, userid) VALUES (?,?,?,?,?)';
-        const userId = 1; //Ajutine, kuni kasutajakontod on valmis
-        await conn.execute(sqlReq, [fileName, req.file.originalname, req.body.altInput || null,
-            req.body.privacyInput, userId]);
-
-        res.render('galleryphotoupload', {notice: 'Foto on üles laaditud!'});
-    }
-    catch (err) {
-        console.log('Foto üleslaadimise viga: ' + err);
-        res.render('galleryphotoupload', {notice: 'Foto üleslaadimine ebaõnnestus.'});
-    }
-    finally {
-        if (conn) await conn.end();
-    }
+	//console.log(req.body);
+	//console.log(req.file);
+	let conn;
+	try {
+		//genereerime oma failinime
+		const fileName = 'vp_' + Date.now() + '.jpg';
+		await fs.rename(req.file.path, req.file.destination + fileName);
+		//kontrollin, kas vesimärgi fail on olemas
+		const watermarkSettings = [{
+			input: watermarkFile,
+			gravity: "southeast"
+		}];
+		if (!await fs.access(watermarkFile).then(() => true).catch(() => false)) {
+             //console.log("Vesimärgi faili ei leitud!");
+             // Tühjendame seaded, et vesimärki ei proovitaks lisada
+             watermarkSettings.length = 0; 
+        }
+		
+		//teeme väiksema veebisõbraliku pildi
+		//await sharp(req.file.destination + fileName).resize(800, 500).jpeg({quality: 90}).toFile('./public/gallery/normal/' + fileName);
+		let normalImageProcessor = await sharp(req.file.destination + fileName).resize(800, 600).jpeg({quality: 90});
+		//lisan vesimärgi
+		//console.log("Lisan vesimärgi" + watermarkSettings.length);    
+        if (watermarkSettings.length > 0) {
+            normalImageProcessor = await normalImageProcessor.composite(watermarkSettings);
+        }
+		await normalImageProcessor.toFile(process.env.UPLOAD_RESIZED_PATH + fileName);
+		
+		//teeme pisipildi (100X100)
+		await sharp(req.file.destination + fileName).resize(100, 100).jpeg({quality: 90}).toFile(process.env.UPLOAD_THUMBNAIL_PATH + fileName);
+		
+		//kanname pildi info andmebaasi
+		conn = await mysql.createConnection({
+			host: process.env.DB_HOST,
+			user: process.env.DB_USER,
+			password: process.env.DB_PASS,
+			database: process.env.DB_DATABASE
+		});
+		const sqlReq = 'INSERT INTO galleryphotos (filename, origname, alttext, privacy, userid) VALUES (?,?,?,?,?)';
+		//const userId = 1; //see on ajutine, kuni teeme kasutajakontod ja sisselogimise
+		const userId = req.session.userId;
+		const [result] = await conn.execute(sqlReq, [fileName, req.file.originalname, req.body.altInput, req.body.privacyInput, userId]);
+		res.render('galleryphotoupload');
+	}
+	catch (err) {
+		console.log('Viga: ' + err);
+		res.render('galleryphotoupload');
+	}
+	finally {
+		if(conn){
+			await conn.end();
+		}
+	}
 };
 
-//Galerii: privaatsus 2 ja 3
-const gallery = async (req, res) => {
-    let conn;
-    let photos = [];
-
-    try {
-        conn = await mysql.createConnection({
-            host: process.env.DB_HOST,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASS,
-            database: process.env.DB_DATABASE
-        });
-
-        const sqlReq = 'SELECT filename, alttext FROM galleryphotos WHERE privacy >= ? AND deleted IS NULL ORDER BY id DESC';
-        const [results] = await conn.execute(sqlReq, [2]);
-        photos = results;
-    }
-    catch (err) {
-        console.log('Galerii lugemise viga: ' + err);
-    }
-    finally {
-        if (conn) await conn.end();
-    }
-
-    res.render('gallery', {photos});
-};
-
-module.exports = {galleryPhotoUpload, galleryPhotoUploadPost, gallery};
+module.exports = {
+	galleryPhotoUpload,
+	galleryPhotoUploadPost
+}

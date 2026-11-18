@@ -17,7 +17,7 @@ const signinPagePost = async (req, res) => {
 	let conn;
 	let notice = '';
 	
-	//kontrollime, kas kÃµik on olemas
+	//kontrollime, kas käik on olemas
 	if(!req.body.emailInput || !req.body.passwordInput){
 		notice = 'Andmeid on puudu!';
 		return res.render('signin', {notice: notice});
@@ -41,6 +41,8 @@ const signinPagePost = async (req, res) => {
 		const match = await argon.verify(users[0].password, req.body.passwordInput);
 		if(match){
 			console.log('Oled sisse loginud kasutaja ' + users[0].id);
+			//käivitame sessiooni, salvestame sessioonimuutujad
+			req.session.userId = users[0].id;
 			return res.redirect('/home');
 		} else {
 			notice = 'Kasutajatunnus ja/vÃµi salasÃµna on vale!';

@@ -2,7 +2,7 @@
 <html lang="et">
 <head>
 	<meta charset="utf-8">
-	<title>Andrus Rinde, veebiprogrammeerimine</title>
+	<title>Uko Nõulik, veebiprogrammeerimine</title>
 	<link rel="styleSheet" href="/style/gallery.css">
 	<script src="/script/gallery.js" defer></script>
 </head>
@@ -24,7 +24,7 @@
 			</div>
 		</div>
 	</dialog>
-	
+	<p><%- links %></p>
 	<div id="gallery" class="gallery">
 		<% galleryData.forEach(function(image){ %>
 		  <img src="<%=imagehref%><%=image.src%>" alt="<%=image.alt%>" data-id="<%= image.id%>" data-filename="<%=image.src%>" class="thumbs">
