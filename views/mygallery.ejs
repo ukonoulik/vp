@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="utf-8">
+    <title>Minu fotogalerii</title>
+    <link rel="stylesheet" href="/style/gallery.css">
+</head>
+<body>
+    <img src="/pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+
+    <h1>Minu fotogalerii</h1>
+
+    <ul>
+        <li><a href="/home">Avalehele</a></li>
+        <li><a href="/gallery">Fotogalerii</a></li>
+        <li><a href="/galleryphotoupload">Lae foto üles</a></li>
+    </ul>
+
+    <hr>
+
+    <% if (galleryData.length === 0) { %>
+        <p>Sa ei ole veel fotosid lisanud.</p>
+    <% } %>
+
+    <div class="gallery">
+        <% galleryData.forEach(function(image) { %>
+
+            <a href="/gallery/my/edit/<%= image.id %>">
+                <img src="<%= imagehref %><%= image.src %>"
+                     alt="<%= image.alt %>"
+                     class="thumbs">
+            </a>
+
+        <% }); %>
+    </div>
+
+</body>
+</html>

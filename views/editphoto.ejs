@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="utf-8">
+    <title>Foto muutmine</title>
+</head>
+<body>
+    <img src="/pic/veebiprogrammeerimine_2026_AA.png" alt="banner">
+
+    <h1>Foto muutmine</h1>
+
+    <p><a href="/gallery/my">Tagasi oma galeriisse</a></p>
+
+    <img src="<%= imagehref %><%= photo.filename %>"
+         alt="<%= photo.alttext || 'Galeriipilt' %>"
+         width="400">
+
+    <form method="POST">
+
+        <label for="altInput">Alternatiivtekst</label>
+
+        <input id="altInput"
+               name="altInput"
+               type="text"
+               maxlength="256"
+               value="<%= photo.alttext || '' %>">
+
+        <br>
+
+        <input id="privacyInput1"
+               name="privacyInput"
+               type="radio"
+               value="1"
+               <%= photo.privacy == 1 ? 'checked' : '' %>>
+
+        <label for="privacyInput1">
+            Privaatne, ainult sina näed
+        </label>
+
+        <br>
+
+        <input id="privacyInput2"
+               name="privacyInput"
+               type="radio"
+               value="2"
+               <%= photo.privacy == 2 ? 'checked' : '' %>>
+
+        <label for="privacyInput2">
+            Sisseloginud kasutajatele
+        </label>
+
+        <br>
+
+        <input id="privacyInput3"
+               name="privacyInput"
+               type="radio"
+               value="3"
+               <%= photo.privacy == 3 ? 'checked' : '' %>>
+
+        <label for="privacyInput3">
+            Avalik (kõik näevad)
+        </label>
+
+        <br>
+
+        <input name="photoSubmit"
+               type="submit"
+               value="Salvesta">
+
+        <input name="photoDelete"
+               type="submit"
+               value="Kustuta foto">
+
+    </form>
+</body>
+</html>
